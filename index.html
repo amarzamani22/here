@@ -1,117 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#08050b">
+<title>To My Everything ❤️</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #08050b;
+  --text: #fff7fb;
+  --muted: #cbbac5;
+  --pink: #ff4f91;
+  --pink2: #ff8fbb;
+  --purple: #a66cff;
+  --glass: rgba(255,255,255,.07);
+  --line: rgba(255,255,255,.13);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: radial-gradient(circle at 20% 10%, rgba(255,79,145,.15), transparent 30%),
+              radial-gradient(circle at 80% 30%, rgba(166,108,255,.12), transparent 30%),
+              var(--bg);
+  color: var(--text);
+  font-family: Inter, Arial, sans-serif;
+  overflow-x: hidden;
+}
+body.locked { overflow: hidden; }
+button { font: inherit; }
 
+#stars { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.noise { position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: .035; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E"); }
+.page { position: relative; z-index: 2; }
 
-A LITTLE UNIVERSE MADE FOR YOU
+/* Intro Screen */
+#intro { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; text-align: center; background: radial-gradient(circle at center, rgba(255,79,145,.15), transparent 40%), #08050b; transition: opacity 1.2s, visibility 1.2s; }
+.intro-inner { padding: 30px; display: flex; flex-direction: column; align-items: center; }
+.mini, .section-label, .surprise-small { color: var(--pink2); text-transform: uppercase; letter-spacing: 4px; font-size: 11px; }
+.mini { margin-bottom: 25px; }
 
-Tap to play our song 🎵
-For My Favourite Person
-This isn't just a website. It's a tiny place filled with my words, our memories, little games, and pieces of my heart.
-Enter Our Universe ✨
-Home
-Games
-Letters
-Our Story
-Memories
-Secret
+/* Vinyl Record Player */
+.vinyl-container { position: relative; margin: 0 auto 35px; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
+.vinyl { width: 110px; height: 110px; border-radius: 50%; background: #111; border: 3px solid #2a2a2a; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 15px #000; transition: transform 0.2s; }
+.vinyl-container:hover .vinyl { transform: scale(1.05); }
+.vinyl::before, .vinyl::after { content: ''; position: absolute; border-radius: 50%; border: 1px solid rgba(255,255,255,0.07); }
+.vinyl::before { width: 80%; height: 80%; }
+.vinyl::after { width: 55%; height: 55%; }
+.vinyl-label { width: 35%; height: 35%; border-radius: 50%; background: linear-gradient(135deg, var(--pink), var(--purple)); position: relative; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(255,79,145,0.5); }
+.vinyl-label::after { content: ''; width: 8px; height: 8px; background: #08050b; border-radius: 50%; }
+.vinyl-tip { margin-top: 15px; font-size: 11px; color: var(--pink2); letter-spacing: 2px; text-transform: uppercase; animation: pulse 1.5s infinite; transition: opacity 0.5s; }
+.spin { animation: spinRecord 3s linear infinite; }
 
-JUST A LITTLE REMINDER 🌹
-I Love You, Puteri
-If I could give you one thing, it would be the ability to see yourself through my eyes — so you would know exactly how precious you are to me.
-Scroll gently ↓
-A SINCERE NOTE
-My Heart to Yours
-I want to take a moment today to say thank you. Thank you for always being my safe space.  I know I put in a lot of effort to be the best for you, but I also know that sometimes I let my feelings get the best of me. I can be too sensitive, and I overthink things. If I have ever made things difficult, caused you stress, or made you sad—I am genuinely so sorry.  I appreciate your patience and your beautiful heart more than words can say. Let's just focus on all the incredibly sweet memories we've made, and the ones we are going to make. You are my absolute favourite part of life.
-Loving you always, ❤️
-OUR LITTLE WORLD
-Just You & Me.
+/* Floating Vinyl for Scroll */
+.fixed-player { position: fixed; bottom: 25px; right: 25px; z-index: 90; opacity: 0; visibility: hidden; transition: 1s; cursor: pointer; }
+.fixed-player.show { opacity: 1; visibility: visible; }
+.fixed-player .vinyl { width: 60px; height: 60px; border-width: 2px; box-shadow: 0 5px 20px rgba(0,0,0,0.9); }
+.fixed-player .vinyl-label { width: 35%; height: 35%; }
+.fixed-player .vinyl-label::after { width: 4px; height: 4px; }
 
-👦🏻
-💖
-👧🏻
-Me, you, Forever & Always.
-SINCE FEBRUARY 7, 2026
-Every second counts.
-Every single day since this date has been a blessing. Here is exactly how long I've been treasuring these moments with you.
-0
-DAYS
-00
-HOURS
-00
-MINUTES
-00
-SECONDS
-WELCOME TO OUR ARCADE
-Play With My Heart 🎮
-Three little games. Each one hides something from me for you. Complete them and unlock pieces of our universe.
-💗
-Catch My Hearts
-Catch as many hearts as you can before time runs out. Some hearts have surprises inside.
-Play Game
+.intro-title, .section-title, .final-title, .surprise-heading { font-family: "Cormorant Garamond", serif; }
+.intro-title { font-size: clamp(46px, 10vw, 90px); line-height: .9; margin-bottom: 18px; }
+.gradient-text { background: linear-gradient(90deg, #fff, var(--pink2), #fff, var(--purple)); background-size: 300%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: gradient 6s ease infinite; }
+.intro-sub, .hero p, .final p { color: var(--muted); line-height: 1.9; }
+.intro-sub { max-width: 480px; margin: 0 auto 30px; }
 
-🧠
-Us Quiz
-Let's see how well you remember our little universe. No pressure... I hope. 😌
-Start Quiz
+/* Enter Button (Hidden Initially) */
+.enter-btn, .surprise-btn { border: 0; cursor: pointer; color: white; padding: 16px 30px; border-radius: 999px; background: linear-gradient(135deg, var(--pink), #c735ff); box-shadow: 0 15px 45px rgba(255,79,145,.3); transition: 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); font-weight: 500; letter-spacing: 1px; }
+.enter-btn:hover, .surprise-btn:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 20px 55px rgba(255,79,145,.4); }
+.enter-btn.hidden-btn { opacity: 0; pointer-events: none; transform: translateY(20px) scale(0.95); }
+#intro.hide { opacity: 0; visibility: hidden; pointer-events: none; }
 
-💑
-Memory Match
-Find all the matching pairs. Think of it as a tiny game about remembering us.
-Play Memory
+/* Hero Section */
+.hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 100px 22px 70px; }
+.hero-inner { max-width: 1000px; }
+.badge { display: inline-flex; padding: 9px 18px; border: 1px solid var(--line); background: var(--glass); backdrop-filter: blur(15px); border-radius: 999px; color: #ffd7e7; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.hero h1 { font-family: "Cormorant Garamond", serif; font-size: clamp(55px, 12vw, 130px); line-height: .8; font-weight: 500; letter-spacing: -1px; }
+.hero p { max-width: 620px; margin: 30px auto 0; font-size: 16px; }
+.scroll { margin-top: 50px; color: #9f8d98; font-size: 10px; letter-spacing: 4px; text-transform: uppercase; animation: bounce 2s infinite; }
 
-A LITTLE VAULT
-Letters For You 💌
-Some things are better opened at the right moment.
-When you miss me
-Open whenever you wish I was beside you.
-When you're having a bad day
-A little reminder that you're never alone.
-When you doubt yourself
-Read this when you forget how amazing you are.
-Our secret letter 🔒
-Complete the games to unlock this one.
-CHAPTER BY CHAPTER
-Our Little Story 📖
-07 FEB 2026
-The Beginning
-The day our little universe officially began. One date that quietly became one of my favourite dates.
-THE LITTLE THINGS
-Our Moments
-The random conversations, laughter, tiny misunderstandings, sweet messages and ordinary days that somehow became special.
-RIGHT NOW
-Still Choosing You
-We are still writing this story. And if I could choose one person to keep writing it with, it would still be you.
-THE FUTURE
-More To Come
-More places. More memories. More photos. More laughter. More “remember when?” moments. This is only the beginning.
-OUR GALLERY
-Little Memories 📸
-Replace these placeholders with our photos whenever you want. The universe will grow with us.
-📸
+/* General Sections */
+section { padding: 100px 22px; position: relative; }
+.container { width: min(1080px, 100%); margin: auto; }
+.section-label { margin-bottom: 15px; text-align: center; }
+.section-title { font-size: clamp(40px, 7vw, 70px); font-weight: 500; line-height: 1; margin-bottom: 25px; text-align: center; }
 
-Put our first favourite photo here
-One of my favourite memories.
-💗
+/* The Apology Letter */
+.letter { max-width: 850px; margin: auto; text-align: center; }
+.letter-card { padding: 50px clamp(24px, 6vw, 70px); border: 1px solid var(--line); border-radius: 32px; background: linear-gradient(145deg, rgba(255,255,255,.06), rgba(255,255,255,.01)); backdrop-filter: blur(25px); box-shadow: 0 30px 100px rgba(0,0,0,.4); position: relative; }
+.letter-card::before { content: '“'; position: absolute; top: -20px; left: 30px; font-family: "Cormorant Garamond", serif; font-size: 120px; color: rgba(255,143,187,.15); line-height: 1; }
+.letter-card p { color: #e7dbe2; font-family: "Cormorant Garamond", serif; font-size: clamp(21px, 3vw, 28px); line-height: 1.7; position: relative; z-index: 2; }
+.signature { margin-top: 35px; color: var(--pink2); font-family: "Cormorant Garamond", serif; font-size: 32px; font-style: italic; }
 
-A photo from a random happy day
-Nothing special. Everything special.
-🌹
+.orbit-wrap { width: 240px; height: 240px; margin: 70px auto 0; position: relative; display: grid; place-items: center; }
+.orbit { position: absolute; inset: 0; border: 1px solid rgba(255,143,187,.25); border-radius: 50%; animation: spin 12s linear infinite; }
+.orbit:before { content: ""; position: absolute; width: 10px; height: 10px; background: var(--pink2); border-radius: 50%; top: 8px; left: 50%; box-shadow: 0 0 25px var(--pink); }
+.big-heart { font-size: 95px; filter: drop-shadow(0 0 35px rgba(255,79,145,.6)); animation: pulse 1.8s infinite; }
 
-A future memory waiting for us
-To be continued...
-THE HIDDEN ROOM
-🔒
-Something is waiting.
-Complete all three games to unlock the secret letter and the final surprise.
-0 / 3
-Still Locked 🔒
-A LITTLE SURPRISE FOR YOU
-I saved one last thing.
-I hope reading this, playing these little games, and exploring our tiny universe brought a smile to your face today. ❤️
-Open My Final Surprise 💌
+/* Animated Chibi Scene */
+.chibi-scene { position: relative; max-width: 600px; height: 320px; margin: 40px auto 0; border: 1px solid var(--line); border-radius: 35px; background: linear-gradient(145deg, rgba(255,79,145,0.08), rgba(166,108,255,0.05)), #100812; box-shadow: 0 25px 60px rgba(0,0,0,0.5), inset 0 0 50px rgba(255,79,145,0.1); display: flex; align-items: center; justify-content: center; gap: 30px; overflow: hidden; }
+.chibi-glow { position: absolute; width: 250px; height: 250px; background: radial-gradient(circle, rgba(255,143,187,0.3) 0%, transparent 70%); border-radius: 50%; animation: pulse 3s infinite; }
+.chibi { font-size: clamp(65px, 12vw, 85px); filter: drop-shadow(0 15px 15px rgba(0,0,0,0.6)); position: relative; z-index: 2; animation: float 3s ease-in-out infinite; }
+.chibi.boy { animation-delay: 0s; }
+.chibi.girl { animation-delay: 1.5s; transform: scaleX(-1); }
+.chibi-heart { font-size: 40px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1; filter: drop-shadow(0 0 20px var(--pink)); animation: heartbeat-float 2.5s infinite; }
+.chibi-text { text-align: center; color: var(--muted); font-size: 16px; margin-top: 25px; font-style: italic; }
+.mini-heart { position: absolute; color: var(--pink2); font-size: 20px; opacity: 0; pointer-events: none; z-index: 1; animation: floatUp 3s ease-in infinite; }
+.mh1 { left: 40%; animation-delay: 0s; }
+.mh2 { left: 60%; font-size: 15px; animation-delay: 1.2s; }
+.mh3 { left: 50%; font-size: 25px; animation-delay: 2.1s; }
 
-CRAFTED WITH SO MUCH LOVE • FOR PUTERI ❤️
-×
-×
-FOR YOU
-❤️
+/* Romantic Counter */
+.counter { text-align: center; }
+.counter-box { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 45px; }
+.time-box { width: 120px; padding: 25px 10px; border: 1px solid rgba(255,143,187,.2); background: linear-gradient(145deg, rgba(255,255,255,.05), transparent); backdrop-filter: blur(10px); border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
+.time-box strong { display: block; font-size: 38px; font-family: "Cormorant Garamond", serif; color: #fff; }
+.time-box small { color: var(--pink2); text-transform: uppercase; letter-spacing: 3px; font-size: 10px; margin-top: 5px; display: block; }
 
-❤️ ✨ 🌹
+/* Final Section */
+.final { min-height: 85vh; display: flex; align-items: center; justify-content: center; text-align: center; }
+.final-inner { width: min(850px, 100%); margin: auto; }
+.final-title { font-size: clamp(45px, 9vw, 90px); line-height: .9; margin-bottom: 25px; }
+.final p { max-width: 600px; margin: 0 auto 40px; }
+
+.footer { text-align: center; padding: 30px 20px 60px; color: #786b74; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; }
+
+/* Surprise Modal - 1 Final Picture */
+#surpriseModal { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(5,2,7,.96); backdrop-filter: blur(25px); opacity: 0; visibility: hidden; pointer-events: none; transition: .6s; }
+#surpriseModal.show { opacity: 1; visibility: visible; pointer-events: auto; }
+.surprise-card { position: relative; width: min(720px, 100%); max-height: 92vh; overflow: auto; padding: 40px 30px; border: 1px solid rgba(255,143,187,.3); border-radius: 35px; background: radial-gradient(circle at 50% 0%, rgba(255,79,145,.2), transparent 45%), rgba(18,9,20,.95); box-shadow: 0 30px 120px rgba(255,79,145,.2); transform: translateY(40px) scale(.95); transition: .7s cubic-bezier(.2,.8,.2,1); text-align: center; }
+#surpriseModal.show .surprise-card { transform: none; }
+.close { position: absolute; right: 25px; top: 25px; width: 45px; height: 45px; border-radius: 50%; border: 1px solid var(--line); background: rgba(255,255,255,.07); color: white; cursor: pointer; font-size: 24px; z-index: 5; display: grid; place-items: center; transition: 0.3s; }
+.close:hover { background: var(--pink); border-color: var(--pink); transform: rotate(90deg); }
+
+.photo-frame { width: 100%; max-width: 500px; margin: auto; padding: 12px; border-radius: 28px; background: linear-gradient(135deg, rgba(255,255,255,.2), rgba(255,79,145,.4), rgba(166,108,255,.3)); box-shadow: 0 0 80px rgba(255,79,145,.25); }
+.photo-frame img { width: 100%; aspect-ratio: 4/5; object-fit: cover; display: block; border-radius: 20px; background: #160b15; }
+.photo-caption { font-family: "Cormorant Garamond", serif; font-size: 32px; margin: 30px auto 10px; color: #fff; }
+.photo-sub { color: #cbbac5; font-size: 14px; line-height: 1.8; max-width: 450px; margin: auto; }
+
+.burst { position: fixed; pointer-events: none; z-index: 250; animation: burst 1.2s ease-out forwards; }
+.reveal { opacity: 0; transform: translateY(35px); transition: 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* Animations */
+@keyframes spinRecord { 100% { transform: rotate(360deg); } }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes gradient { 0% { background-position: 0%; } 50% { background-position: 100%; } 100% { background-position: 0%; } }
+@keyframes bounce { 0%, 100% { transform: translateY(0); opacity: .5; } 50% { transform: translateY(8px); opacity: 1; } }
+@keyframes burst { 0% { transform: translate(0,0) scale(1); opacity: 1; } 100% { transform: translate(var(--x),var(--y)) scale(0); opacity: 0; } }
+@keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+@keyframes heartbeat-float { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -65%) scale(1.2); } }
+@keyframes floatUp { 0% { transform: translateY(20px) scale(0.5); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-70px) scale(1.2); opacity: 0; } }
+
+@media(max-width: 500px) {
+  section { padding: 75px 17px; }
+  .hero h1 { letter-spacing: 0px; font-size: clamp(45px, 12vw, 100px); }
+  .letter-card { padding: 40px 22px; }
+  .chibi-scene { height: 260px; gap: 15px; }
+  .time-box { width: 90px; padding: 18px 8px; }
+  .time-box strong { font-size: 28px; }
+  .surprise-card { padding: 30px 20px; }
+}
+</style>
+</head>
+<body class="locked">
+
+<!-- AUDIO ELEMENT: PUT YOUR MP3 FILE NAME HERE -->
+<audio id="bg-music" loop>
+  <source src="Andmesh Kamaleng - Cinta Luar Biasa - Piano Instrumental TUTORIAL by Piano Fun Play.mp3" type="audio/mpeg">
+</audio>
+
+<canvas id="stars"></canvas><div class="noise"></div>
+
+<!-- Intro Screen -->
+<div id="intro">
+  <div class="intro-inner">
+    <div class="mini">A little universe for you</div>
+    
+    <!-- Interactive Vinyl Player -->
+    <div class="vinyl-container" onclick="toggleMusic(true)">
+      <div class="vinyl" id="intro-vinyl">
+        <div class="vinyl-label"></div>
+      </div>
+      <div class="vinyl-tip" id="vinyl-tip">Tap to play our song 🎵</div>
+    </div>
+    
+    <h1 class="intro-title">For My<br><span class="gradient-text">Favourite Person</span></h1>
+    
+    <!-- Hidden until vinyl is clicked -->
+    <button class="enter-btn hidden-btn" id="enter-btn" onclick="enterSite()">Open Your Surprise ✨</button>
+  </div>
+</div>
+
+<!-- Floating Vinyl for scrolling page -->
+<div class="fixed-player" id="fixed-player" onclick="toggleMusic(false)">
+  <div class="vinyl" id="main-vinyl">
+    <div class="vinyl-label"></div>
+  </div>
+</div>
+
+<div class="page">
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-inner reveal">
+      <div class="badge">Just a little reminder 🌹</div>
+      <!-- ADDED HER NAME HERE -->
+      <h1>I Love You,<br><span class="gradient-text">Puteri</span></h1>
+      <p>If I could give you one thing, it would be the ability to see yourself through my eyes — so you would know exactly how precious you are to me.</p>
+      <div class="scroll">Scroll gently ↓</div>
+    </div>
+  </header>
+
+  <!-- The Apology / Appreciation Letter -->
+  <section>
+    <div class="container letter reveal">
+      <div class="section-label">A sincere note</div>
+      <h2 class="section-title">My Heart to Yours</h2>
+      <div class="letter-card">
+        <p>
+          I want to take a moment today to say thank you. Thank you for always being my safe space. <br><br>
+          I know I put in a lot of effort to be the best for you, but I also know that sometimes I let my feelings get the best of me. I can be too sensitive, and I overthink things. If I have ever made things difficult, caused you stress, or made you sad—I am genuinely so sorry. <br><br>
+          I appreciate your patience and your beautiful heart more than words can say. Let's just focus on all the incredibly sweet memories we've made, and the ones we are going to make. You are my absolute favourite part of life.
+        </p>
+        <div class="signature">Loving you always, ❤️</div>
+      </div>
+      <div class="orbit-wrap">
+        <div class="orbit"></div>
+        <div class="big-heart">❤️</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Animated Chibi Scene -->
+  <section>
+    <div class="container reveal">
+      <div class="section-label">Our little world</div>
+      <h2 class="section-title">Just You & Me.</h2>
+      
+      <div class="chibi-scene">
+        <div class="chibi-glow"></div>
+        <div class="mini-heart mh1">💖</div>
+        <div class="mini-heart mh2">✨</div>
+        <div class="mini-heart mh3">❤️</div>
+        
+        <div class="chibi boy">👦🏻</div>
+        <div class="chibi-heart">💖</div>
+        <div class="chibi girl">👧🏻</div>
+      </div>
+      <p class="chibi-text">Me, you, Forever & Always.</p>
+      
+    </div>
+  </section>
+
+  <!-- The Counter (Starts Feb 7, 2026) -->
+  <section>
+    <div class="container counter reveal">
+      <div class="section-label">Since February 7, 2026</div>
+      <h2 class="section-title">Every second counts.</h2>
+      <p style="color:var(--muted);line-height:1.8;max-width:600px;margin:auto">
+        Every single day since this date has been a blessing. Here is exactly how long I've been treasuring these moments with you.
+      </p>
+      <div class="counter-box">
+        <div class="time-box"><strong id="days">00</strong><small>Days</small></div>
+        <div class="time-box"><strong id="hours">00</strong><small>Hours</small></div>
+        <div class="time-box"><strong id="minutes">00</strong><small>Minutes</small></div>
+        <div class="time-box"><strong id="seconds">00</strong><small>Seconds</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final Section -->
+  <section class="final">
+    <div class="final-inner reveal">
+      <div class="section-label">A little surprise for you</div>
+      <h2 class="final-title">I saved<br><span class="gradient-text">one last thing.</span></h2>
+      <p>I hope reading this brought a smile to your face today. ❤️</p>
+      <button class="surprise-btn" onclick="openSurprise()">Open My Final Surprise 💌</button>
+    </div>
+  </section>
+
+  <footer class="footer">CRAFTED WITH SO MUCH LOVE • FOR PUTERI ❤️</footer>
+</div>
+
+<!-- Final Surprise Modal (IMG_1159.jpeg) -->
+<div id="surpriseModal">
+  <button class="close" onclick="closeSurprise()">×</button>
+  <div class="surprise-card">
+    <div class="surprise-small">The purest joy</div>
+    <h2 class="surprise-heading">You are<br>my home. ❤️</h2>
+    
+    <div class="photo-frame">
+      <img src="IMG_1159.jpeg" alt="Our final memory" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'500\'><rect width=\'100%\' height=\'100%\' fill=\'%231a0a15\'/><text x=\'50%\' y=\'50%\' font-family=\'sans-serif\' font-size=\'15\' fill=\'%23ff8fbb\' text-anchor=\'middle\'>Add IMG_1159.jpeg here ❤️</text></svg>'">
+    </div>
+    
+    <div class="photo-caption">My favourite place is wherever you are.</div>
+    <div class="photo-sub">Thank you for accepting me, loving me, and building these beautiful memories with me. I love you so much. ❤️</div>
+    <div style="margin-top:25px;font-size:25px;letter-spacing:12px">❤️✨🌹</div>
+  </div>
+</div>
+
+<script>
+// --- Music & Vinyl Logic ---
+let isPlaying = false;
+const audio = document.getElementById('bg-music');
+const introVinyl = document.getElementById('intro-vinyl');
+const mainVinyl = document.getElementById('main-vinyl');
+const enterBtn = document.getElementById('enter-btn');
+const vinylTip = document.getElementById('vinyl-tip');
+const fixedPlayer = document.getElementById('fixed-player');
+
+function toggleMusic(fromIntro = false) {
+  if (isPlaying) {
+    audio.pause();
+    introVinyl.classList.remove('spin');
+    mainVinyl.classList.remove('spin');
+    isPlaying = false;
+  } else {
+    audio.play();
+    introVinyl.classList.add('spin');
+    mainVinyl.classList.add('spin');
+    isPlaying = true;
+    
+    // If clicked from intro, reveal the enter button
+    if(fromIntro) {
+      enterBtn.classList.remove('hidden-btn');
+      vinylTip.style.opacity = '0'; // Hide the hint
+    }
+  }
+}
+
+// --- Site Navigation Logic ---
+function enterSite() {
+  document.getElementById('intro').classList.add('hide');
+  document.body.classList.remove('locked');
+  fixedPlayer.classList.add('show'); // Show floating vinyl
+  window.scrollTo(0,0);
+}
+
+function openSurprise() {
+  document.getElementById('surpriseModal').classList.add('show');
+  document.body.classList.add('locked');
+  createBurst();
+}
+
+function closeSurprise() {
+  document.getElementById('surpriseModal').classList.remove('show');
+  document.body.classList.remove('locked');
+}
+
+document.getElementById('surpriseModal').addEventListener('click', e => {
+  if(e.target === e.currentTarget) closeSurprise();
+});
+
+// --- Heart Burst Animation ---
+function createBurst() {
+  const s = ['❤️', '💗', '✨', '💕', '🌹', '⭐'];
+  for(let i=0; i<50; i++) {
+    let e = document.createElement('div');
+    e.className = 'burst';
+    e.textContent = s[Math.floor(Math.random() * s.length)];
+    let a = Math.random() * Math.PI * 2, d = 100 + Math.random() * 400;
+    e.style.left = '50%'; e.style.top = '50%';
+    e.style.fontSize = (10 + Math.random() * 20) + 'px';
+    e.style.setProperty('--x', Math.cos(a) * d + 'px');
+    e.style.setProperty('--y', Math.sin(a) * d + 'px');
+    document.body.appendChild(e);
+    setTimeout(() => e.remove(), 1200);
+  }
+}
+
+// --- Scroll Reveal ---
+const observer = new IntersectionObserver(es => es.forEach(e => {
+  if(e.isIntersecting) e.target.classList.add('visible');
+}), { threshold: .12 });
+document.querySelectorAll('.reveal').forEach(e => observer.observe(e));
+
+// --- Romantic Counter (Starts Feb 7, 2026) ---
+const startDate = new Date('2026-02-07T00:00:00');
+function updateCounter() {
+  let d = Math.max(0, new Date() - startDate);
+  let days = Math.floor(d / 86400000); d %= 86400000;
+  let h = Math.floor(d / 3600000); d %= 3600000;
+  let m = Math.floor(d / 60000); d %= 60000;
+  let s = Math.floor(d / 1000);
+  
+  document.getElementById('days').textContent = String(days).padStart(2, '0');
+  document.getElementById('hours').textContent = String(h).padStart(2, '0');
+  document.getElementById('minutes').textContent = String(m).padStart(2, '0');
+  document.getElementById('seconds').textContent = String(s).padStart(2, '0');
+}
+updateCounter();
+setInterval(updateCounter, 1000);
+
+// --- Starry Canvas Background ---
+const canvas = document.getElementById('stars'), ctx = canvas.getContext('2d');
+let stars = [];
+function resizeCanvas() {
+  canvas.width = innerWidth * devicePixelRatio;
+  canvas.height = innerHeight * devicePixelRatio;
+  canvas.style.width = innerWidth + 'px';
+  canvas.style.height = innerHeight + 'px';
+  ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  stars = [];
+  for(let i=0; i<Math.min(200, Math.floor(innerWidth / 5)); i++) {
+    stars.push({
+      x: Math.random() * innerWidth, y: Math.random() * innerHeight,
+      r: Math.random() * 1.5 + .3, a: Math.random() * .7 + .15,
+      speed: Math.random() * .01 + .003
+    });
+  }
+}
+function drawStars() {
+  ctx.clearRect(0, 0, innerWidth, innerHeight);
+  stars.forEach(s => {
+    s.a += s.speed;
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,220,235,${.3 + Math.abs(Math.sin(s.a)) * .7})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+addEventListener('resize', resizeCanvas);
+resizeCanvas();
+drawStars();
+
+// Allow Escape key to close modal
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeSurprise(); });
+</script>
+</body>
+</html>
